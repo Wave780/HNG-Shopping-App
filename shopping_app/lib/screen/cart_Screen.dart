@@ -20,7 +20,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   bool isShowingLoadingDialog = false;
-   
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,41 +47,53 @@ class _CartScreenState extends State<CartScreen> {
                 child: ListView.builder(
                     itemCount: widget.checkoutProduct.length,
                     itemBuilder: (context, int index) {
-                      return ListTile(
-                        subtitle: Text(widget.checkoutProduct[index].name),
-                        leading:
-                            Image(image: widget.checkoutProduct[index].image),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.payment_sharp),
-                          onPressed: () async {
-                            if (!isShowingLoadingDialog) {
-                              setState(() {
-                                isShowingLoadingDialog = true;
-                              });
+                      final item = widget.checkoutProduct[index];
+                      return Dismissible(
+                        key:  ValueKey(item),
+                        onDismissed: (direction) {
+                          setState(() {
+                            widget.removeProduct(item);
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text(' Deleted ')));
+                        },
+                        child: ListTile(
+                          subtitle: Text(widget.checkoutProduct[index].name),
+                          leading:
+                              Image(image: widget.checkoutProduct[index].image),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.payment_sharp),
+                            onPressed: () async {
+                              if (!isShowingLoadingDialog) {
+                                setState(() {
+                                  isShowingLoadingDialog = true;
+                                });
 
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  });
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    });
 
-                              await Future.delayed(const Duration(seconds: 2));
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
 
-                              widget
-                                  .removeProduct(widget.checkoutProduct[index]);
+                                widget.removeProduct(
+                                    widget.checkoutProduct[index]);
 
-                              Navigator.pop(context);
-                              setState(() {
-                                isShowingLoadingDialog = false;
-                              });
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return const OrderScreen();
-                              }));
-                            }
-                          },
+                                Navigator.pop(context);
+                                setState(() {
+                                  isShowingLoadingDialog = false;
+                                });
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) {
+                                  return const OrderScreen();
+                                }));
+                              }
+                            },
+                          ),
                         ),
                       );
                     }))
