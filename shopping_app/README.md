@@ -21,7 +21,7 @@ This is an assignment report for the HNG stage one task. I was tasked to develop
 
 # Appetize Demo
 
-- you can view the app on Appetize.io{}
+- you can view the app on Appetize.io [Click here](https://appetize.io/app/vp6i7j6fanbtwpzovpehl2le4u?device=pixel7&osVersion=13.0&record=true) 
 
 # Project Structure
 
